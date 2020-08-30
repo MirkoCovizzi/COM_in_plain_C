@@ -1,11 +1,11 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "iexample.h"
 
 int main() {
-    static const IExampleVtbl IExample_Vtbl = {SetString, GetString};
-
     IExample *example;
 
-    example = (IExample *) GlobalAlloc(GMEM_FIXED, sizeof(IExample));
+    example = malloc(sizeof(IExample));
 
     example->lpVtbl = &IExample_Vtbl;
     example->count = 1;
@@ -13,8 +13,12 @@ int main() {
 
     char buffer[80];
 
-    example->lpVtbl->SetString("Some text");
-    example->lpVtbl->GetString(buffer, sizeof(buffer));
+    example->lpVtbl->SetString(example, "Some text");
+    example->lpVtbl->GetString(example, buffer, sizeof(buffer));
+
+    printf("%lu\n", example->count);
+
+    free(example);
 
     return 0;
 }
